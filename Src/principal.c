@@ -1,9 +1,11 @@
 
 
 #include "DriverJeuLaser.h"
+#include "GestionSon.h"
 
 extern short Son;
 extern int LongueurSon;
+extern void PlaySound(void);
 short* Cursor;
 
  
@@ -13,7 +15,17 @@ short* Cursor;
 //	if(Cursor < (&Son+LongueurSon))
 //		Cursor++;
 //}
+void StartSon(){
+	CLOCK_Configure();
+	int Te=72*91;
+	Timer_1234_Init_ff(TIM4,Te);
+	Active_IT_Debordement_Timer( TIM4, 2, PlaySound );
+	PWM_Init_ff( TIM3, 3, 720 );
 
+	GPIO_Configure(GPIOB, 0, OUTPUT, ALT_PPULL);
+
+	Cursor = &Son;
+}
 int main(void)
 {
 
@@ -22,18 +34,10 @@ int main(void)
 // ===========================================================================
 
 // Après exécution : le coeur CPU est clocké à 72MHz ainsi que tous les timers
-CLOCK_Configure();
-	Timer_1234_Init_ff(TIM4,7200);
-	extern void PlaySound();
-	Active_IT_Debordement_Timer( TIM4, 2, PlaySound );
 
-	GPIO_Configure(GPIOB, 1, OUTPUT, OUTPUT_PPULL);
-	
-
-	Cursor = &Son;
 //============================================================================	
 	
-	
+	StartSon();
 	
 	
 while	(1)

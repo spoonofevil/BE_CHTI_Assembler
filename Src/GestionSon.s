@@ -30,7 +30,7 @@ PlaySound proc
 	
 	;R0 = Cursor;
 	ldr R0, =Cursor
-	ldrsh R0, [R0]
+	ldr R0, [R0]
 	
 	;R1 = *R0;
 	ldrsh R1, [R0]
@@ -50,18 +50,25 @@ PlaySound proc
 	ldr R2, =SortieSon
 	str R1, [R2]
 	
+	push {R0}
+	push {lr}
+	mov R0, R1
+	bl PWM_Set_Value_TIM3_Ch3
+	pop {lr}
+	pop {R0}
 	
 	;R1=&Son
 	ldr R1, =Son
-	
 	;R1+=LongueurSon
 	ldr R2, =LongueurSon
 	ldr R2, [R2]
+	lsl r2,#1
+	
 	add R1, R2
 	
 	;if(R0 < R1){
 	cmp R0, R1
-	bcs return
+	bge return
 	;	R0++;
 	add r0, #2
 	
